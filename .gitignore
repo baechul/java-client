@@ -5,7 +5,6 @@ out/*
 target/classes/*
 target/test-classes/*
 target/surefire-reports/*
-settings.xml
 *.iml
 
 # Eclipse

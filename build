@@ -1,0 +1,9 @@
+#!/bin/bash -e
+
+pwd
+eval echo ~$USER
+
+MVN_TARGETS="clean deploy"
+mvn -B -U -s ./settings.xml -DskipTests $MVN_TARGETS 
+
+#set -x && mvn -U clean test -s ./settings.xml -fn
