@@ -1,0 +1,817 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Outbound data API",
+    "version": "1"
+  },
+  "schemes": [
+    "http"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "basePath": "/outbound-data",
+  "paths": {
+    "/status": {
+      "get": {
+        "description": "Check service health",
+        "operationId": "status",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/revoke_token": {
+      "post": {
+        "operationId": "revokeToken",
+        "responses": {
+          "201": {
+            "description": "revokes access tokens, no content"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "revokeToken",
+        "responses": {
+          "201": {
+            "description": "revokes access tokens, no content"
+          }
+        }
+      }
+    },
+    "/1.0/availability": {
+      "get": {
+        "operationId": "availability",
+        "description": "API availability",
+        "responses": {
+          "200": {
+            "description": "returns availability response",
+            "schema": {
+              "$ref": "#/definitions/Availability"
+            }
+          }
+        }
+      }
+    },
+    "/1.0/capability": {
+      "get": {
+        "operationId": "capability",
+        "description": "returns service capabilities",
+        "responses": {
+          "200": {
+            "description": "API’s capabilities",
+            "schema": {
+              "$ref": "#/definitions/Capability"
+            }
+          }
+        }
+      }
+    },
+    "/1.0/account": {
+      "post": {
+        "description": "Get an account.",
+        "operationId": "getAccount",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "description": "Account identifier",
+            "in": "formData",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Account details with transactions.",
+            "schema": {
+              "$ref": "#/definitions/AccountResponse"
+            },
+            "examples": {
+              "application/json": {
+                "DepositAccount": {
+                  "accountId": "0000009984410-00412",
+                  "displayName": "004129984410",
+                  "status": "OPEN",
+                  "accountNumber": "0000009984410",
+                  "interestRate": null,
+                  "currency": {},
+                  "currentBalance": 52.75,
+                  "openingDayBalance": 41.5,
+                  "availableBalance": 52.75,
+                  "transactions": [
+                    {
+                      "accountId": "0000009984410-00412",
+                      "postedTimestamp": "2017-03-24T00:00:00.000",
+                      "description": "DEPOSIT,,",
+                      "status": "POSTED",
+                      "amount": 2.25,
+                      "transactionType": "DEPOSIT",
+                      "debitCreditMemo": "CREDIT",
+                      "checkNumber": null
+                    },
+                    {
+                      "accountId": "0000009984410-00412",
+                      "postedTimestamp": "2017-03-23T00:00:00.000",
+                      "description": "DEPOSIT,,",
+                      "status": "POSTED",
+                      "amount": 2.25,
+                      "transactionType": "DEPOSIT",
+                      "debitCreditMemo": "CREDIT",
+                      "checkNumber": null
+                    },
+                    {
+                      "accountId": "0000009984410-00412",
+                      "postedTimestamp": "2017-03-22T00:00:00.000",
+                      "description": "DEPOSIT,,",
+                      "status": "POSTED",
+                      "amount": 2.25,
+                      "transactionType": "DEPOSIT",
+                      "debitCreditMemo": "CREDIT",
+                      "checkNumber": null
+                    },
+                    {
+                      "accountId": "0000009984410-00412",
+                      "postedTimestamp": "2017-03-21T00:00:00.000",
+                      "description": "DEPOSIT,,",
+                      "status": "POSTED",
+                      "amount": 2.25,
+                      "transactionType": "DEPOSIT",
+                      "debitCreditMemo": "CREDIT",
+                      "checkNumber": null
+                    },
+                    {
+                      "accountId": "0000009984410-00412",
+                      "postedTimestamp": "2017-03-17T00:00:00.000",
+                      "description": "DEPOSIT,,",
+                      "status": "POSTED",
+                      "amount": 2.25,
+                      "transactionType": "DEPOSIT",
+                      "debitCreditMemo": "CREDIT",
+                      "checkNumber": null
+                    },
+                    {
+                      "accountId": "0000009984410-00412",
+                      "postedTimestamp": "2017-03-16T00:00:00.000",
+                      "description": "DEPOSIT,,",
+                      "status": "POSTED",
+                      "amount": 2.25,
+                      "transactionType": "DEPOSIT",
+                      "debitCreditMemo": "CREDIT",
+                      "checkNumber": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error"
+          }
+        }
+      }
+    },
+    "/1.0/account/transactions": {
+      "post": {
+        "description": "Get account transactions.",
+        "operationId": "getAccountTransactions",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "description": "Account identifier",
+            "in": "formData",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "startTime",
+            "description": "Start time for use in retrieval; ISO 8601 date including zone indicator or combined date time including zone indicator",
+            "in": "formData",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "endTime",
+            "description": "End time for use in retrieval; ISO 8601 date including zone indicator or combined date time including zone indicator",
+            "in": "formData",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "page",
+            "description": "Page number",
+            "in": "formData",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transaction details.",
+            "schema": {
+              "$ref": "#/definitions/TransactionsResponse"
+            },
+            "examples": {
+              "application/json": {
+                "Transactions": {
+                  "total": 10,
+                  "totalPages": 1,
+                  "page": 1,
+                  "depositTransactions": [
+                    {
+                      "accountId": "0000009984410-00412",
+                      "transactionId": "1",
+                      "postedTimestamp": "2017-03-24T00:00:00.000",
+                      "transactionTimestamp": "2017-03-24T00:00:00.000",
+                      "description": "DEPOSIT",
+                      "status": "POSTED",
+                      "amount": 2.25,
+                      "transactionType": "DEPOSIT",
+                      "debitCreditMemo": "CREDIT",
+                      "checkNumber": null
+                    },
+                    {
+                      "accountId": "0000009984410-00412",
+                      "transactionId": "2",
+                      "postedTimestamp": "2017-03-23T00:00:00.000",
+                      "transactionTimestamp": "2017-03-23T00:00:00.000",
+                      "description": "DEPOSIT",
+                      "status": "POSTED",
+                      "amount": 2.25,
+                      "transactionType": "DEPOSIT",
+                      "debitCreditMemo": "CREDIT",
+                      "checkNumber": null
+                    },
+                    {
+                      "accountId": "0000009984410-00412",
+                      "transactionId": "3",
+                      "postedTimestamp": "2017-03-22T00:00:00.000",
+                      "transactionTimestamp": "2017-03-22T00:00:00.000",
+                      "description": "DEPOSIT",
+                      "status": "POSTED",
+                      "amount": 2.25,
+                      "transactionType": "DEPOSIT",
+                      "debitCreditMemo": "CREDIT",
+                      "checkNumber": null
+                    },
+                    {
+                      "accountId": "0000009984410-00412",
+                      "transactionId": "4",
+                      "postedTimestamp": "2017-03-21T00:00:00.000",
+                      "transactionTimestamp": "2017-03-21T00:00:00.000",
+                      "description": "DEPOSIT",
+                      "status": "POSTED",
+                      "amount": 2.25,
+                      "transactionType": "DEPOSIT",
+                      "debitCreditMemo": "CREDIT",
+                      "checkNumber": null
+                    },
+                    {
+                      "accountId": "0000009984410-00412",
+                      "transactionId": "5",
+                      "postedTimestamp": "2017-03-17T00:00:00.000",
+                      "transactionTimestamp": "2017-03-17T00:00:00.000",
+                      "description": "DEPOSIT",
+                      "status": "POSTED",
+                      "amount": 2.25,
+                      "transactionType": "DEPOSIT",
+                      "debitCreditMemo": "CREDIT",
+                      "checkNumber": null
+                    },
+                    {
+                      "accountId": "0000009984410-00412",
+                      "transactionId": "6",
+                      "postedTimestamp": "2017-03-16T00:00:00.000",
+                      "transactionTimestamp": "2017-03-16T00:00:00.000",
+                      "description": "DEPOSIT",
+                      "status": "POSTED",
+                      "amount": 2.25,
+                      "transactionType": "DEPOSIT",
+                      "debitCreditMemo": "CREDIT",
+                      "checkNumber": null
+                    },
+                    {
+                      "accountId": "0000009984410-00412",
+                      "transactionId": "7",
+                      "postedTimestamp": "2017-03-15T00:00:00.000",
+                      "transactionTimestamp": "2017-03-15T00:00:00.000",
+                      "description": "DEPOSIT",
+                      "status": "POSTED",
+                      "amount": 2.25,
+                      "transactionType": "DEPOSIT",
+                      "debitCreditMemo": "CREDIT",
+                      "checkNumber": null
+                    },
+                    {
+                      "accountId": "0000009984410-00412",
+                      "transactionId": "8",
+                      "postedTimestamp": "2017-03-14T00:00:00.000",
+                      "transactionTimestamp": "2017-03-14T00:00:00.000",
+                      "description": "DEPOSIT",
+                      "status": "POSTED",
+                      "amount": 2.25,
+                      "transactionType": "DEPOSIT",
+                      "debitCreditMemo": "CREDIT",
+                      "checkNumber": null
+                    },
+                    {
+                      "accountId": "0000009984410-00412",
+                      "transactionId": "9",
+                      "postedTimestamp": "2017-03-13T00:00:00.000",
+                      "transactionTimestamp": "2017-03-13T00:00:00.000",
+                      "description": "DEPOSIT",
+                      "status": "POSTED",
+                      "amount": 2.25,
+                      "transactionType": "DEPOSIT",
+                      "debitCreditMemo": "CREDIT",
+                      "checkNumber": null
+                    },
+                    {
+                      "accountId": "0000009984410-00412",
+                      "transactionId": "10",
+                      "postedTimestamp": "2017-03-10T00:00:00.000",
+                      "transactionTimestamp": "2017-03-10T00:00:00.000",
+                      "description": "DEPOSIT",
+                      "status": "POSTED",
+                      "amount": 2.25,
+                      "transactionType": "DEPOSIT",
+                      "debitCreditMemo": "CREDIT",
+                      "checkNumber": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error"
+          }
+        }
+      }
+    },
+    "/1.0/accountlist": {
+      "get": {
+        "description": "Get a lightweight list of accounts for the current token.",
+        "operationId": "getAccountList",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Returns a lightweight list of accounts",
+            "schema": {
+              "$ref": "#/definitions/AccountListResponse"
+            },
+            "examples": {
+              "application/json": {
+                "AccountDescriptorList": {
+                  "accountDescriptors": [
+                    {
+                      "accountId": "0000009984410-00412",
+                      "displayName": "004129984410",
+                      "status": "OPEN"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error"
+          }
+        }
+      }
+    },
+    "/1.0/accountsdetails": {
+      "get": {
+        "description": "Returns all accounts with transactions",
+        "operationId": "getUserAccountsHandler",
+        "parameters": [
+          {
+            "name": "startTime",
+            "description": "Start time for use in retrieval",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "endTime",
+            "description": "End time for use in retrieval",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "page",
+            "description": "Page number",
+            "in": "query",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns accounts with transactions",
+            "schema": {
+              "$ref": "#/definitions/AccountsResponse"
+            },
+            "examples": {
+              "application/json": {
+                "Accounts": {
+                  "total": 1,
+                  "page": 1,
+                  "pageSize": 10,
+                  "totalPages": 1,
+                  "depositAccounts": [
+                    {
+                      "accountId": "0000009984410-00412",
+                      "displayName": "004129984410",
+                      "status": "OPEN",
+                      "accountNumber": "0000009984410",
+                      "interestRate": null,
+                      "currency": {},
+                      "currentBalance": 61.75,
+                      "openingDayBalance": 61.75,
+                      "availableBalance": 61.75,
+                      "transactions": [
+                        {
+                          "accountId": "0000009984410-00412",
+                          "postedTimestamp": "2017-01-23T00:00:00.000",
+                          "description": "DEPOSIT,,",
+                          "status": "POSTED",
+                          "amount": 2.25,
+                          "transactionType": "DEPOSIT",
+                          "debitCreditMemo": "CREDIT",
+                          "checkNumber": null
+                        },
+                        {
+                          "accountId": "0000009984410-00412",
+                          "postedTimestamp": "2017-01-24T00:00:00.000",
+                          "description": "DEPOSIT,,",
+                          "status": "POSTED",
+                          "amount": 2.25,
+                          "transactionType": "DEPOSIT",
+                          "debitCreditMemo": "CREDIT",
+                          "checkNumber": null
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error"
+          }
+        }
+      },
+      "post": {
+        "description": "Query all information for a set of accounts provided in the payload.",
+        "operationId": "getSelectedUserAccountsHandler",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Query parameters.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AccountsDetailsRequestBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns accounts with transactions",
+            "schema": {
+              "$ref": "#/definitions/AccountsResponse"
+            },
+            "examples": {
+              "application/json": [
+                {
+                }
+              ]
+            }
+          },
+          "default": {
+            "description": "unexpected error"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Capability": {
+      "type": "object",
+      "properties": {
+        "Capability": {
+          "type": "object",
+          "properties": {
+            "supportsAccounts": {
+              "type": "boolean"
+            },
+            "supportsTransactions": {
+              "type": "boolean"
+            },
+            "messageFormat": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "Availability": {
+      "type": "object",
+      "properties": {
+        "Availability": {
+          "type": "object",
+          "properties": {
+            "currentStatus": {
+              "type": "string"
+            },
+            "currentStatusDesc": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "AccountResponse": {
+      "type": "object",
+      "properties": {
+        "DepositAccount": {
+          "$ref": "#/definitions/DepositAccount"
+        }
+      }
+    },
+    "TransactionsResponse": {
+      "type": "object",
+      "properties": {
+        "Transactions": {
+          "$ref": "#/definitions/Transactions"
+        }
+      }
+    },
+    "AccountListResponse": {
+      "type": "object",
+      "properties": {
+        "AccountDescriptorList": {
+          "$ref": "#/definitions/AccountDescriptorList"
+        }
+      }
+    },
+    "AccountsDetailsRequestBody": {
+      "type": "object",
+      "properties": {
+        "AccountsDetailsRequest": {
+          "$ref": "#/definitions/AccountsDetailsRequest"
+        }
+      }
+    },
+    "AccountsDetailsRequest": {
+      "type": "object",
+      "properties": {
+        "singleAccountDetailsRequestList": {
+          "type": "object",
+          "properties": {
+            "singleAccountDetailsRequest": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SingleAccountDetailsRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "SingleAccountDetailsRequest": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string"
+        },
+        "startTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "page": {
+          "type": "integer"
+        }
+      }
+    },
+    "AccountsResponse": {
+      "type": "object",
+      "properties": {
+        "Accounts": {
+          "type": "object",
+          "properties": {
+            "depositAccounts": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DepositAccount"
+              }
+            },
+            "total": {
+              "type": "integer"
+            },
+            "totalPages": {
+              "type": "integer"
+            },
+            "page": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    },
+    "AccountDescriptorList": {
+      "type": "object",
+      "properties": {
+        "accountDescriptors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AccountDescriptor"
+          }
+        }
+      }
+    },
+    "AccountDescriptor": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Account identity to display to customer. '-' will always be returned for this field"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "OPEN"
+          ],
+          "description": "'OPEN' will always be returned for this field"
+        }
+      }
+    },
+    "Account": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AccountDescriptor"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "accountNumber": {
+              "type": "string"
+            },
+            "routingTransitNumber": {
+              "type": "string"
+            },
+            "interestRate": {
+              "type": "number",
+              "description": "Interest Rate of Account. Note that an empty value is always returned for this field"
+            },
+            "currency": {
+              "$ref": "#/definitions/Currency"
+            }
+          }
+        }
+      ]
+    },
+    "DepositAccount": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Account"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "currentBalance": {
+              "type": "number"
+            },
+            "openingDayBalance": {
+              "type": "number"
+            },
+            "availableBalance": {
+              "type": "number"
+            },
+            "transactions": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DepositTransaction"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Transactions": {
+      "type": "object",
+      "properties": {
+        "DepositTransactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DepositTransaction"
+          }
+        },
+        "total": {
+          "type": "integer"
+        },
+        "totalPages": {
+          "type": "integer"
+        },
+        "page": {
+          "type": "integer"
+        }
+      }
+    },
+    "Transaction": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string"
+        },
+        "transactionId": {
+          "type": "string"
+        },
+        "postedTimestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "transactionTimestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "POSTED"
+          ],
+          "description": "Only 'POSTED' transactions are returned"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "debitCreditMemo": {
+          "type": "string"
+        }
+      }
+    },
+    "DepositTransaction": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Transaction"
+        },
+        {
+          "properties": {
+            "transactionType": {
+              "type": "string"
+            },
+            "checkNumber": {
+              "type": "integer"
+            }
+          }
+        }
+      ]
+    },
+    "Currency": {
+      "type": "object",
+      "properties": {
+        "currencyRate": {
+          "type": "number"
+        },
+        "currencyCode": {
+          "type": "string",
+          "description": "Currency code from Iso4217Code"
+        },
+        "originalCurrencyCode": {
+          "type": "string",
+          "description": "Currency code from Iso4217Code"
+        }
+      }
+    }
+  }
+}
